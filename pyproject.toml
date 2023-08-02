@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "software for robo-hands"
+version = "0.1.0"
+description = "Software for robot hands is a specialized program designed to control and operate robotic hands.  The software acts as the interface between the user and the robotic hands, enabling seamless communication and control. With the help of advanced algorithms and sensory feedback systems, the software ensures accurate and responsive movements of the robotic hands. It can interpret commands from the user, process them, and translate them into precise actions performed by the robotic hands."
+authors = ["Shashatkin Anton <shashatkin@mail.ru>"]
+license = "None"
+readme = "README.md"
+packages = [{include = "software for robo_hands"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.25.2"
+pygame = "^2.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
