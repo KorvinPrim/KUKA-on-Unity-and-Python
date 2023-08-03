@@ -21,13 +21,13 @@ var RoboManip = NewManipulator(
 	3,
 	[]float64{50,50,50}, 						//link lengths
 	[]float64{
-		math.Pi*1.5,
-		math.Pi*1.5,
-		math.Pi*1.5},   //starting position
+		math.Pi*5,
+		math.Pi/8,
+		math.Pi/8},   //starting position
 	[]float64{
-		math.Pi/128,
-		math.Pi/256,
-		math.Pi/128},					//rotation speed
+		0.01,
+		0.001,
+		0.005},					//rotation speed
 	[]float64{0,0,0})							//acceleration of rotation
 
 type App struct {
@@ -46,9 +46,10 @@ func (a *App) Draw(screen *ebiten.Image) {
 
 	RoboManip.calculate_movement()
 	a.draw_manip(screen, RoboManip)
-	a.draw_iterface(screen)
+	a.draw_iterface(RoboManip.direct_kinematics(),screen)
 
 
+	fmt.Println(RoboManip.direct_kinematics()["xHand"]," - ",RoboManip.robotStruct[2]["endX"])
 
 }
 func (a *App) Layout(outsideWidth, outsideHeight int) (int, int) {

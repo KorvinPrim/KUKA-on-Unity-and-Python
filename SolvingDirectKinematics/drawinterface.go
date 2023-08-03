@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"log"
 
@@ -41,7 +42,8 @@ func init() {
 	mplusBigFont = text.FaceWithLineHeight(mplusBigFont, 54)
 }
 
-func (a *App) draw_iterface(screen *ebiten.Image){
+func (a *App) draw_iterface(data map[string]float64, screen *ebiten.Image){
 	const x = 20
-	text.Draw(screen, "sampleText", mplusNormalFont, x, 80, color.Black)
+	dataText := fmt.Sprintf("X:%.1f Y:%.1f Q:%.1f",data["xHand"],data["yHand"],data["QHand"])
+	text.Draw(screen, dataText, mplusNormalFont, x, 80, color.Black)
 }
