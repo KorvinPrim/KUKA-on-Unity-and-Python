@@ -1,4 +1,4 @@
-// Copyright 2016 Hajime Hoshi
+// Copyright 2017 The Ebiten Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,17 +16,12 @@ package main
 
 import (
 	"fmt"
-	"image/color"
 	"log"
-	"math/rand"
-	"time"
-
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
+	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
@@ -34,69 +29,65 @@ const (
 	screenHeight = 480
 )
 
-const sampleText = `The quick brown fox jumps over the lazy dog.`
-
-var (
-	mplusNormalFont font.Face
-	mplusBigFont    font.Face
-)
-
-
-
-func init() {
-	tt, err := opentype.Parse(fonts.MPlus1pRegular_ttf)
-	if err != nil {
-		log.Fatal(err)
+// repeatingKeyPressed return true when key is pressed considering the repeat state.
+func repeatingKeyPressed(key ebiten.Key) bool {
+	const (
+		delay    = 30
+		interval = 3
+	)
+	d := inpututil.KeyPressDuration(key)
+	if d == 1 {
+		return true
 	}
-
-	const dpi = 72
-	mplusNormalFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    24,
-		DPI:     dpi,
-		Hinting: font.HintingVertical,
-	})
-	if err != nil {
-		log.Fatal(err)
+	if d >= delay && (d-delay)%interval == 0 {
+		return true
 	}
-	mplusBigFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    48,
-		DPI:     dpi,
-		Hinting: font.HintingFull, // Use quantization to save glyph cache images.
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Adjust the line height.
-	mplusBigFont = text.FaceWithLineHeight(mplusBigFont, 54)
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
+	return false
 }
 
 type Game struct {
-	counter        int
-	kanjiText      string
-
+	runes   []rune
+	text    string
+	counter int
 }
 
 func (g *Game) Update() error {
-	// Change the text color for each second.
+	// Add runes that are input by the user by AppendInputChars.
+	// Note that AppendInputChars result changes every frame, so you need to call this
+	// every frame.
+	g.runes = ebiten.AppendInputChars(g.runes[:0])
+	g.text += string(g.runes)
+
+	// Adjust the string to be at most 10 lines.
+	ss := strings.Split(g.text, "\n")
+	if len(ss) > 10 {
+		g.text = strings.Join(ss[len(ss)-10:], "\n")
+	}
+
+	// If the enter key is pressed, add a line break.
+	if repeatingKeyPressed(ebiten.KeyEnter) || repeatingKeyPressed(ebiten.KeyNumpadEnter) {
+		g.text += "\n"
+	}
+
+	// If the backspace key is pressed, remove one character.
+	if repeatingKeyPressed(ebiten.KeyBackspace) {
+		if len(g.text) >= 1 {
+			g.text = g.text[:len(g.text)-1]
+		}
+	}
+
+	g.counter++
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	const x = 20
+	// Blink the cursor.
+	t := g.text
 
-	// Draw info
-	msg := fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS())
-	text.Draw(screen, msg, mplusNormalFont, x, 40, color.White)
-
-	// Draw the sample text
-	text.Draw(screen, sampleText, mplusNormalFont, x, 80, color.White)
-
-
+	if g.counter%50 < 30 {
+		t += "_"
+	}
+	ebitenutil.DebugPrint(screen, t)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -104,9 +95,14 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func main() {
+	g := &Game{
+		text:    "Type on the keyboard:\n",
+		counter: 0,
+	}
+
 	ebiten.SetWindowSize(screenWidth, screenHeight)
-	ebiten.SetWindowTitle("Font (Ebitengine Demo)")
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	ebiten.SetWindowTitle("TypeWriter (Ebitengine Demo)")
+	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
 }
