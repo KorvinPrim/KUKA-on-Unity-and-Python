@@ -1,5 +1,43 @@
 package main
 
+/*
+The code is a part of a larger program and it defines
+functions related to drawing text on the screen using the Ebiten library in Go.
+
+The code begins by importing necessary packages and
+libraries. It then declares two font variables -
+mplusNormalFont and mplusBigFont.
+
+The init() function is called during the initialization
+phase of the program. It parses a TrueType font file
+(MPlus1pRegular_ttf) using the opentype library and
+assigns it to the mplusNormalFont variable. It also
+sets the size, DPI, and hinting options for the font.
+Then, it adjusts the line height for the mplusBigFont.
+
+The draw_interface() function takes in some data and
+a screen image as parameters. It uses the text.Draw()
+function from the Ebiten library to draw text on the
+screen using the mplusNormalFont. It formats the text
+based on the provided data and draws it at specific
+coordinates on the screen.
+
+The repeatingKeyPressed() function checks if a key is
+pressed repeatedly. It takes in a key parameter and
+returns a boolean value indicating whether the key is
+being pressed repeatedly based on a delay and interval.
+
+The draw_text() function is not fully implemented in
+the provided code. It is supposed to draw text on the
+screen, including a blinking cursor. It uses the
+mplusNormalFont and the text.Draw() function to
+draw the text at specific coordinates on the screen.
+
+Overall, the code initializes fonts, provides functions
+to draw text on the screen using those fonts, and checks
+for repeated key presses.
+*/
+
 import (
 	"fmt"
 	"image/color"

@@ -1,8 +1,31 @@
 package main
 
 /*
+The main package contains code for performing conversions
+between degrees and radians, as well as a function for
+direct kinematics calculations for a manipulator.
 
- */
+The code defines two types, Radian and Degree, which
+represent angles in radians and degrees respectively.
+Each type has methods for converting to the other type
+and returning the angle as a float64 value.
+
+The package also includes two functions, degreesToRadians
+and radiansToDegrees, which perform simple conversions
+between degrees and radians using mathematical formulas.
+
+The direct_kinematics function takes in the width and
+height of a window and calculates the position of a
+manipulator's hand using the given robot structure.
+It iterates through the robot structure, updating the
+hand position based on the length and angle of each segment.
+The final position of the hand is returned as a map with keys
+"xHand", "yHand", and "QHand" representing the x-coordinate,
+y-coordinate, and angle in degrees respectively.
+
+The commented out main function demonstrates the usage
+of the conversion functions and the direct_kinematics function.
+*/
 
 import (
 	"math"

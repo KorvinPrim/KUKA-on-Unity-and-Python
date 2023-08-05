@@ -1,5 +1,47 @@
 package main
 
+/*
+The code defines a struct called "Manipulator" which represents a robot arm manipulator.
+The struct has several fields including the center coordinates, the number of elements
+in the arm, a map representing the structure of the arm, and a map representing the
+working area of the arm.
+
+The code also defines a function called "NewManipulator" which is a constructor
+for creating a new instance of the Manipulator struct. The function takes several
+parameters including the screen width and height, the center coordinates of the
+manipulator, the number of elements in the arm, and lists of element lengths,
+angles, speeds, and accelerations.
+
+The function first checks if the center coordinates are within the screen boundaries.
+If they are not, it prints an error message and exits the program. Then it
+checks if the number of element lengths and angles match the number of elements
+in the arm. If they don't match, it prints an error message and exits the program.
+
+Next, the function creates a map called "rStruct" to represent the structure of
+the arm. It iterates over the number of elements and assigns the length value
+to each element. For the first element, it assigns the start and end coordinates
+based on the center coordinates and the length of the element. For the
+subsequent elements, it calculates the start and end coordinates based
+on the end coordinates of the previous element and the length of the
+current element. It also assigns the speed, acceleration, and angle values to each element.
+
+After that, the function calculates the working area of the arm.
+It iterates over the elements in the "rStruct" map and accumulates
+the total distance by adding up the lengths of all elements. Then
+it creates a new map called "working_area" and assigns the distance,
+as well as the minimum and maximum values of the X and Y coordinates
+based on the center coordinates and the total distance.
+
+Finally, the function returns a new instance of the Manipulator
+struct with the center coordinates, number of elements, the
+"rStruct" map, and the "working_area" map.
+
+In summary, the code defines a struct for a robot arm manipulator
+and provides a constructor function to create a new instance of
+the struct with specified parameters. The constructor initializes
+the structure and working area of the arm based on the given parameters.
+*/
+
 import (
 	"fmt"
 	"os"

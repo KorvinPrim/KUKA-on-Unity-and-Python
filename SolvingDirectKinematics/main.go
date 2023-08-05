@@ -1,5 +1,26 @@
 package main
 
+/*
+The code is a simulation of a robotic arm. It defines the dimensions and characteristics
+of the arm and allows the user to input commands through the keyboard. The program then
+updates the arm's position and displays it on the screen.
+
+The code first imports necessary packages and defines constants for the screen dimensions.
+It then creates a manipulator object with specific characteristics such as link lengths and starting position.
+
+The App struct defines the properties of the application such as the screen dimensions
+and the text displayed on the screen. The Update function updates the text displayed
+on the screen based on user input. The Draw function draws the robotic arm on the
+screen and updates its position based on the manipulator object. The Layout function
+sets the dimensions of the screen.
+
+The main function prompts the user to input whether they want to solve the inverse
+task and if yes, prompts for the x and y coordinates. It then sets the window size
+and runs the game using the App struct.
+
+Overall, the code creates a simulation of a robotic arm that can be controlled through user input.
+*/
+
 import (
 	"fmt"
 	"image/color"
