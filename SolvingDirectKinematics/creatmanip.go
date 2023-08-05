@@ -6,10 +6,11 @@ import (
 )
 
 type Manipulator struct {
-	centerX     float64
-	centerY     float64
-	element     int
-	robotStruct map[int]map[string]float64
+	centerX      float64
+	centerY      float64
+	element      int
+	robotStruct  map[int]map[string]float64
+	working_area map[string]float64
 }
 
 func NewManipulator(
@@ -37,18 +38,19 @@ func NewManipulator(
 		fmt.Println("The number of angles does not match the number of lengths of the elements")
 		os.Exit(1)
 	}
+	//Working with the links of the robot arm
 	rStruct := map[int]map[string]float64{}
 	for i := 0; i < elem; i++ {
 		//assign a length value to each elem
 		rStruct[i] = map[string]float64{}
 		rStruct[i]["length"] = float64(elemLengths[i])
 		//assign the start and end values to the first element
-		if i == 0{
+		if i == 0 {
 			rStruct[i]["beginX"] = float64(x)
 			rStruct[i]["beginY"] = float64(y)
 
-			rStruct[i]["endX"] = float64(x+elemLengths[i])
-			rStruct[i]["endY"] = float64(y+elemLengths[i])
+			rStruct[i]["endX"] = float64(x + elemLengths[i])
+			rStruct[i]["endY"] = float64(y + elemLengths[i])
 
 		} else {
 			//creating the beginning of the next link from the points of the end of the previous link
@@ -56,14 +58,28 @@ func NewManipulator(
 			rStruct[i]["beginY"] = float64(rStruct[i-1]["endY"])
 			//creating the end of the current link from the points of the end of the previous link
 			//plus the length of the current link
-			rStruct[i]["endX"] = float64(rStruct[i-1]["endX"]+elemLengths[i])
-			rStruct[i]["endY"] = float64(rStruct[i-1]["endY"]+elemLengths[i])
+			rStruct[i]["endX"] = float64(rStruct[i-1]["endX"] + elemLengths[i])
+			rStruct[i]["endY"] = float64(rStruct[i-1]["endY"] + elemLengths[i])
 		}
 		rStruct[i]["speed"] = speedList[i]
 		rStruct[i]["acceler"] = accelerList[i]
 		rStruct[i]["angle"] = angList[i]
 
 	}
+	//Сalculation of the working area of the robot arm
+	distance := 0.0
+	working_area := make(map[string]float64, 5)
+	for _, elem := range rStruct {
+		distance += elem["length"]
+	}
 
-	return &Manipulator{x, y, elem, rStruct}
+	working_area["Distance"] = distance
+
+	working_area["Xmin"] = x - distance
+	working_area["Xmax"] = x + distance
+
+	working_area["Ymin"] = y - distance
+	working_area["Ymax"] = y + distance
+
+	return &Manipulator{x, y, elem, rStruct, working_area}
 }

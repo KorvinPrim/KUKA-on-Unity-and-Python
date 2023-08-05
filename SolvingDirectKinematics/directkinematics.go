@@ -2,7 +2,7 @@ package main
 
 /*
 
-*/
+ */
 
 import (
 	"math"
@@ -36,24 +36,24 @@ func radiansToDegrees(rad float64) float64 {
 	return rad * (180.0 / math.Pi)
 }
 
-func (m *Manipulator) direct_kinematics() map[string]float64{
-	var xHand float64 = 300.0
-	var yHand float64 = 300.0
+func (m *Manipulator) direct_kinematics(wind_width float64, wind_height float64) map[string]float64 {
+	var xHand float64 = wind_width / 2
+	var yHand float64 = wind_height / 2
 	var QHand float64
 
-	for i:=0;i < len(m.robotStruct); i++{
-		if i == 0{
-			QHand+=2*math.Pi-m.robotStruct[i]["angle"]
-		}else {
+	for i := 0; i < len(m.robotStruct); i++ {
+		if i == 0 {
+			QHand += 2*math.Pi - m.robotStruct[i]["angle"]
+		} else {
 			QHand += m.robotStruct[i-1]["angle"] - m.robotStruct[i]["angle"]
 
 		}
-		xHand += m.robotStruct[i]["length"]*math.Cos(QHand)
-		yHand += m.robotStruct[i]["length"]*math.Sin(QHand)
+		xHand += m.robotStruct[i]["length"] * math.Cos(QHand)
+		yHand += m.robotStruct[i]["length"] * math.Sin(QHand)
 
 	}
 
-	return map[string]float64{"xHand":xHand,"yHand":yHand,"QHand":radiansToDegrees(QHand)}
+	return map[string]float64{"xHand": xHand, "yHand": yHand, "QHand": radiansToDegrees(QHand)}
 
 }
 
